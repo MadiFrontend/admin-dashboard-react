@@ -20,10 +20,9 @@ export default function Register() {
         </p>
         <p className="lead">
           قبلا ثبت نام کرده اید؟
-          {/* <Link to="/login" className="me-2">
+          <Link to="/login" className="me-2">
             وارد شوید{" "}
-          </Link> */}
-          <p className="me-2">وارد شوید</p>
+          </Link>
         </p>
       </div>
 
