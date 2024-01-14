@@ -5,11 +5,13 @@ import { Link } from "react-router-dom";
 export default function Register() {
   const {
     register,
-    // handleSubmit,
     watch,
     formState: { errors },
+    handleSubmit,
   } = useForm();
-  // const onSubmit = (data) => console.log(data);
+
+  const onSubmit = (data) => console.log(data);
+
   return (
     <>
       <div className="text-center mt-4">
@@ -29,7 +31,7 @@ export default function Register() {
       <div className="card">
         <div className="card-body">
           <div className="m-sm-4">
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-3">
                 <label className="form-label">موبایل</label>
                 <input
