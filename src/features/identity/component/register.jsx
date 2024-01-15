@@ -1,6 +1,8 @@
 import logo from "@assets/images/logo.svg";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useSubmit, useNavigation } from "react-router-dom";
+import { httpService } from "../../../core/http-service";
+import { method } from "lodash";
 
 export default function Register() {
   const {
@@ -10,7 +12,14 @@ export default function Register() {
     handleSubmit,
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const submitForm = useSubmit();
+  const onSubmit = (data) => {
+    const { confirmPassword, ...userData } = data;
+    submitForm(userData, { method: "post" });
+  };
+
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state !== "idle";
 
   return (
     <>
@@ -102,8 +111,12 @@ export default function Register() {
                   )}
               </div>
               <div className="text-center mt-3">
-                <button type="submit" className="btn btn-lg btn-primary">
-                  ثبت نام کنید
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn btn-lg btn-primary"
+                >
+                  {isSubmitting ? "درحال انجام عملیات" : "ثبت نام کنید"}
                 </button>
               </div>
             </form>
@@ -112,4 +125,11 @@ export default function Register() {
       </div>
     </>
   );
+}
+
+export async function registerAction({ request }) {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  const response = await httpService.post("/Users", data);
+  return response.status === 200;
 }
