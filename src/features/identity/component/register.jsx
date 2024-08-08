@@ -1,8 +1,16 @@
 import logo from "@assets/images/logo.svg";
 import { useForm } from "react-hook-form";
-import { Link, useSubmit, useNavigation } from "react-router-dom";
+import {
+  Link,
+  useSubmit,
+  useNavigation,
+  useActionData,
+  useNavigate,
+  useRouteError,
+} from "react-router-dom";
 import { httpService } from "../../../core/http-service";
 import { method } from "lodash";
+import { useEffect } from "react";
 
 export default function Register() {
   const {
@@ -20,6 +28,20 @@ export default function Register() {
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
+
+  const isSuccessOpration = useActionData();
+
+  const navigate = useNavigate();
+
+  const routeErrors = useRouteError();
+
+  useEffect(() => {
+    if (isSuccessOpration) {
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    }
+  }, [isSuccessOpration]);
 
   return (
     <>
@@ -119,6 +141,18 @@ export default function Register() {
                   {isSubmitting ? "درحال انجام عملیات" : "ثبت نام کنید"}
                 </button>
               </div>
+              {isSuccessOpration && (
+                <div className="alert alert-success text-success p-2 mt-3">
+                  عملیات با موفقیت انجام شد، به صفحه ورود منتقل می شوید
+                </div>
+              )}
+              {routeErrors && (
+                <div className="alert alert-danger text-danger p-2 mt-3">
+                  {routeErrors.response?.data.map((error) => {
+                    <p className="mb-0">{error.description}</p>;
+                  })}
+                </div>
+              )}
             </form>
           </div>
         </div>
